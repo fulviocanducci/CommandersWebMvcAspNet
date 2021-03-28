@@ -1,4 +1,6 @@
+using System.Reflection;
 using Commanders.Datas;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
@@ -30,6 +32,7 @@ namespace Commanders
             services.AddDbContext<DatabaseContext>(config => {
                 config.UseSqlServer(Configuration.GetConnectionString("DatabaseAccess"));
             });
+            services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
             services.AddScoped<DatabaseContext>();
             services.AddControllers();
             services.AddSwaggerGen(c =>

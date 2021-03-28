@@ -1,3 +1,4 @@
+using Commanders.Models;
 using Commanders.Models.Mappings;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,5 +15,7 @@ namespace Commanders.Datas
         {
             modelBuilder.ApplyConfiguration(new CommanderMapping());
         }
+
+        public DbSet<Commander> Commander {get;set;}
     }
 }
