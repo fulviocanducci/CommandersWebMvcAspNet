@@ -4,13 +4,13 @@ using MediatR;
 
 namespace Commanders.Requests
 {
-    public class CommanderPutAsync: IRequest<bool>
+    public class TodoPostAsync: IRequest<Todo>
     {
-        [Required]
-        public int Id {get;set;}
-
         [Required()]
         [MaxLength(100)]
-        public string Name { get; set; }
+        public string Description { get; set; }
+
+        [Required]
+        public bool Done {get;set;}
     }
 }

@@ -14,8 +14,10 @@ namespace Commanders.Datas
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new CommanderMapping());
+            modelBuilder.ApplyConfiguration(new TodoMapping());
         }
 
         public DbSet<Commander> Commander {get;set;}
+        public DbSet<Todo> Todo {get;set;}
     }
 }

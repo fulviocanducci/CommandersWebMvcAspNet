@@ -1,10 +1,10 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Commanders.Models;
 using Commanders.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Commanders.Controllers
 {
@@ -12,10 +12,10 @@ namespace Commanders.Controllers
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ApiController]
-    public class CommandersController : ControllerBase
+    public class TodosController: ControllerBase
     {
         public IMediator Mediator { get; }
-        public CommandersController(IMediator mediator)
+        public TodosController(IMediator mediator)
         {
             Mediator = mediator;
         }
@@ -24,35 +24,35 @@ namespace Commanders.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IEnumerable<Commander>>> GetCommander()
+        public async Task<ActionResult<IEnumerable<Todo>>> GetTodo()
         {
-            return Ok(await Mediator.Send(new CommanderGetAsync()));
+            return Ok(await Mediator.Send(new TodoGetAsync()));
         }
 
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Commander>> GetCommander(int id)
+        public async Task<ActionResult<IEnumerable<Todo>>> GetTodo(int id)
         {
-            var commander = await Mediator.Send(new CommanderGetByIdAsync(id));
-            if (commander == null)
+            var todo = await Mediator.Send(new TodoGetByIdAsync(id));
+            if (todo == null)
             {
                 return NotFound();
             }
-            return Ok(commander);
+            return Ok(todo);
         }
 
         [HttpPost()]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
-        public async Task<ActionResult<Commander>> PostCommander(CommanderPostAsync model)
+        public async Task<ActionResult<Commander>> PostTodo(TodoPostAsync model)
         {
             if (ModelState.IsValid)
             {
-                var commander = await Mediator.Send(model);
-                return CreatedAtAction(nameof(GetCommander), new { commander.Id }, commander);
+                var todo = await Mediator.Send(model);
+                return CreatedAtAction(nameof(GetTodo), new { todo.Id }, todo);
             }
             return BadRequest(ModelState);
         }
@@ -61,7 +61,7 @@ namespace Commanders.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> PutCommander(int id, CommanderPutAsync model)
+        public async Task<ActionResult> PutTodo(int id, TodoPutAsync model)
         {
             if (id != model.Id)
             {
@@ -85,9 +85,9 @@ namespace Commanders.Controllers
         [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> DeleteCommander(int id)
+        public async Task<ActionResult> DeleteTodo(int id)
         {
-            var result = await Mediator.Send(new CommanderDeleteByIdAsync(id));
+            var result = await Mediator.Send(new TodoDeleteByIdAsync(id));
             if (result)
             {
                 return Ok();

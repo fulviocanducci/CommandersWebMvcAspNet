@@ -4,10 +4,11 @@ using Commanders.Datas;
 using Commanders.Requests;
 using Commanders.Models;
 using MediatR;
+using System.Linq;
 
 namespace Commanders.Handlers
 {
-    public class CommanderHandlerPutAsync: IRequestHandler<CommanderPutAsync, Commander>
+    public class CommanderHandlerPutAsync: IRequestHandler<CommanderPutAsync, bool>
     {
         private readonly DatabaseContext _context;
         public CommanderHandlerPutAsync(DatabaseContext context)
@@ -15,12 +16,15 @@ namespace Commanders.Handlers
             _context = context;
         }
         
-        public async Task<Commander> Handle(CommanderPutAsync request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(CommanderPutAsync request, CancellationToken cancellationToken)
         {
-            Commander commander = new Commander { Id = request.Id, Name = request.Name};
-            _context.Update(commander);
-            await _context.SaveChangesAsync();
-            return commander;
+            if (_context.Commander.Any(x => x.Id == request.Id))
+            {
+                Commander commander = new() { Id = request.Id, Name = request.Name };
+                _context.Update(commander);
+                return await _context.SaveChangesAsync() > 0;
+            }
+            return false;
         }
     }
 }
