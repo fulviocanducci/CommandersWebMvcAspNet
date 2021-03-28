@@ -7,18 +7,18 @@ using MediatR;
 
 namespace Commanders.Handlers
 {
-    public class CommanderHandlerPostAsync: IRequestHandler<CommanderPostAsync, Commander>
+    public class CommanderHandlerPutAsync: IRequestHandler<CommanderPutAsync, Commander>
     {
         private readonly DatabaseContext _context;
-        public CommanderHandlerPostAsync(DatabaseContext context)
+        public CommanderHandlerPutAsync(DatabaseContext context)
         {
             _context = context;
         }
         
-        public async Task<Commander> Handle(CommanderPostAsync request, CancellationToken cancellationToken)
+        public async Task<Commander> Handle(CommanderPutAsync request, CancellationToken cancellationToken)
         {
-            Commander commander = new Commander { Name = request.Name};
-            await _context.AddAsync(commander);
+            Commander commander = new Commander { Id = request.Id, Name = request.Name};
+            _context.Update(commander);
             await _context.SaveChangesAsync();
             return commander;
         }
